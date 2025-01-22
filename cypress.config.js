@@ -1,5 +1,5 @@
 const { defineConfig } = require("cypress");
-const { fetchResetLink } = require('./email-utils/fetchOldEmail');
+const { fetchResetLink } = require("./email-utils/fetchOldEmail");
 
 module.exports = defineConfig({
   numTestsKeptInMemory: 15,
@@ -22,15 +22,15 @@ module.exports = defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // Adaugă logica sarcinii personalizate
-      on('task', {
-        fetchResetLink: async () => {
-          try {
-            const link = await fetchResetLink();
-            return link; // Return the reset link to the Cypress test
-          } catch (err) {
-            throw new Error(`Failed to fetch reset link: ${err.message}`);
-          }
-        },
+      on("task", {
+        // fetchResetLink: async () => {
+        //   try {
+        //     const link = await fetchResetLink();
+        //     return link; // Return the reset link to the Cypress test
+        //   } catch (err) {
+        //     throw new Error(`Failed to fetch reset link: ${err.message}`);
+        //   }
+        // },
       });
 
       // Păstrează logica existentă, dacă e cazul

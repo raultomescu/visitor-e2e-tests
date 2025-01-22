@@ -7,10 +7,11 @@
     "cy:open:web": "cypress open --e2e --browser=chrome --env device=web",
     "cy:run:mob": "cypress run --browser=chrome --env device=mob",
     "cy:run:web": "cypress run --env device=web",
-    "cy:ci": "cypress run --env device=web --record --parallel --browser chrome --headless"
+    "cy:ci": "cypress run --env device=web --record --parallel --browser chrome --headless",
+    "test": "npx cypress open --browser electron"
   },
   "devDependencies": {
-    "cypress": "^13.14.2",
+    "cypress": "^14.0.0",
     "eslint": "^7.23.0"
   },
   "dependencies": {
@@ -19,6 +20,8 @@
     "mailparser": "^3.7.1",
     "open": "^10.1.0",
     "quoted-printable": "^1.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "utf7": "^1.0.1"
   }
 }
