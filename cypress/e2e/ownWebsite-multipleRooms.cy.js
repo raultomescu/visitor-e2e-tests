@@ -2,11 +2,12 @@ describe("Date Picker Interaction", () => {
   it("can compare the final cost between pages", () => {
     // Visit the specified URL
     cy.visit(
-      "https://visitor-qa.visitor.de/?language=en-US&checkinDate=06-01-2028&checkoutDate=07-01-2028"
+      "https://visitor-qa.visitor.de/?language=en-US&checkinDate=01-01-2026&checkoutDate=02-01-2026"
     );
 
     // Select the number of adults
     cy.get('input[name="numberOfAdults"]').should("exist").clear().type("3");
+
 
     // Wait for "0 Room(s)" to appear
     cy.contains("p", "0 Room(s)").should("be.visible");
@@ -24,6 +25,11 @@ describe("Date Picker Interaction", () => {
           .should("exist")
           .scrollIntoView()
           .click({ force: true });
+
+        cy.get(`[data-testid="add-btn-${uuid}"]`)
+        .should("exist")
+        .scrollIntoView()
+        .click({ force: true });
       });
 
     // Wait for the final cost to appear and store it in a variable
