@@ -4,7 +4,7 @@ describe("Login and Create Booking", () => {
   beforeEach(() => {
     cy.clearCookies();
     cy.clearLocalStorage();
-    cy.visit("http://dev.visitor.de:3000/login");
+    cy.visit("https://app.visitor.de/login");
   });
 
   it("can login and create booking", function () {
