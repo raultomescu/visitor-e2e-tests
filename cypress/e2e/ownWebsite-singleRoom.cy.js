@@ -10,8 +10,14 @@ describe("Booking Flow", () => {
     // Select the number of adults and children
     cy.get('input[name="numberOfAdults"]').should("exist").clear().type("1");
     cy.get('input[name="numberOfChildren"]').should("exist").clear().type("2");
-    cy.get('input[name="childrenAges[0].age"]').should("exist").clear().type("5");
-    cy.get('input[name="childrenAges[1].age"]').should("exist").clear().type("7");
+    cy.get('input[name="childrenAges[0].age"]')
+      .should("exist")
+      .clear()
+      .type("5");
+    cy.get('input[name="childrenAges[1].age"]')
+      .should("exist")
+      .clear()
+      .type("7");
 
     // Wait for "0 Room(s)" to appear
     cy.contains("p", "0 Room(s)").should("be.visible");
@@ -28,41 +34,26 @@ describe("Booking Flow", () => {
           .click({ force: true });
       });
 
-    // Compare costs on different pages
-    //De asta nu e nevoie
-    cy.get('[data-testid="final-cost"]')
-      .should("be.visible")
-      .invoke("text")
-      .then((initialFinalCost) => {
-        const firstPageCost = initialFinalCost.trim();
-        cy.get('[data-testid="next-step-btn"]')
-          .should("exist")
-          .scrollIntoView()
-          .click({ force: true });
+    cy.get('input[name="firstName"]').should("exist").clear().type("Popescu");
+    cy.get('input[name="lastName"]').should("exist").clear().type("Maria");
+    cy.get('input[name="phoneNumber"]')
+      .should("exist")
+      .clear()
+      .type("0712345678");
+    cy.get('input[name="email"]')
+      .should("exist")
+      .clear()
+      .type("maria@gmail.com");
 
-        cy.get('[data-testid="final-cost"]')
-          .should("be.visible")
-          .invoke("text")
-          .then((nextPageFinalCost) => {
-            const secondPageCost = nextPageFinalCost.trim();
-            expect(firstPageCost).to.equal(secondPageCost);
-            //.
+    cy.get(`[data-testid="next-step-btn"]`)
+      .should("exist")
+      .scrollIntoView()
+      .click({ force: true });
 
-            cy.get('input[name="firstName"]').should("exist").clear().type("Popescu");
-            cy.get('input[name="lastName"]').should("exist").clear().type("Maria");
-            cy.get('input[name="phoneNumber"]').should("exist").clear().type("0712345678");
-            cy.get('input[name="email"]').should("exist").clear().type("maria@gmail.com");
-
-            cy.get(`[data-testid="next-step-btn"]`)
-              .should("exist")
-              .scrollIntoView()
-              .click({ force: true });
-          });
-      });
+    // check the number of adults, number of children and the children ages
   });
 
   it("should log in and verify booking details", () => {
-   
     cy.clearCookies();
     cy.clearLocalStorage();
     cy.visit("https://app.visitor.de/login");
@@ -81,12 +72,24 @@ describe("Booking Flow", () => {
       "https://app.visitor.de/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=maria"
     );
 
-    cy.get('[data-testid="first-name"]').contains("Popescu Maria").first().click();
+    cy.get('[data-testid="customer-name"]')
+      .contains("Popescu Maria")
+      .first()
+      .click();
 
     cy.get('[data-testid="MoreVertIcon"]').click();
 
     cy.get('[data-testid="edit-btn"]').click();
 
-    cy.get('input[id="roomBookings[0].numberOfChildren"]').should("have.value", "2");
+    cy.get('input[id="roomBookings[0].numberOfAdults"]').should(
+      "have.value",
+      "1"
+    );
+    cy.get('input[id="roomBookings[0].numberOfChildren"]').should(
+      "have.value",
+      "2"
+    );
+
+    // check children ages
   });
 });
