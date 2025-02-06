@@ -80,22 +80,22 @@ describe("Login and Create Booking", () => {
         expect(price).to.be.greaterThan(0);
         cy.log(`Room ${index + 1} price per night: €${price}`);
 
-        // Verify adults - modified section
+        // Verify adults
         cy.get(`input[name="roomBookings[${index}].numberOfAdults"]`)
           .scrollIntoView()
           .should("be.visible")
-          .wait(500) // Add small wait to ensure element is properly visible
+          .wait(500) 
           .then(($adultsInput) => {
             const adults = parseInt($adultsInput.val());
             expect(adults).to.be.within(1, 4);
             cy.log(`Room ${index + 1} adults: ${adults}`);
           });
 
-        // Verify children - modified section
+        // Verify children
         cy.get(`input[name="roomBookings[${index}].numberOfChildren"]`)
           .scrollIntoView()
           .should("be.visible")
-          .wait(500) // Add small wait to ensure element is properly visible
+          .wait(500)
           .then(($childrenInput) => {
             const children = parseInt($childrenInput.val());
             expect(children).to.be.at.least(0);
