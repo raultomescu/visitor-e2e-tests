@@ -56,6 +56,7 @@ describe("Login and Create Booking", () => {
     cy.wait(3000); // Wait for the dropdown to load
 
     cy.get('[role="listbox"]')
+      .first()
       .should("be.visible")
       .should("have.length.gt", 0)
       .within(() => {
@@ -71,7 +72,6 @@ describe("Login and Create Booking", () => {
       });
 
     // Verify booking creation
-
     cy.get('input[name*="roomBookings"][name*="pricePerNight"]')
       .should("have.length.gt", 0)
       .each(($priceInput, index) => {
@@ -80,23 +80,40 @@ describe("Login and Create Booking", () => {
         expect(price).to.be.greaterThan(0);
         cy.log(`Room ${index + 1} price per night: €${price}`);
 
-        // Verify adults
+        // Verify adults - modified section
         cy.get(`input[name="roomBookings[${index}].numberOfAdults"]`)
+          .scrollIntoView()
           .should("be.visible")
+          .wait(500) // Add small wait to ensure element is properly visible
           .then(($adultsInput) => {
             const adults = parseInt($adultsInput.val());
             expect(adults).to.be.within(1, 4);
             cy.log(`Room ${index + 1} adults: ${adults}`);
           });
 
-        // Verify children
+        // Verify children - modified section
         cy.get(`input[name="roomBookings[${index}].numberOfChildren"]`)
+          .scrollIntoView()
           .should("be.visible")
+          .wait(500) // Add small wait to ensure element is properly visible
           .then(($childrenInput) => {
             const children = parseInt($childrenInput.val());
             expect(children).to.be.at.least(0);
             cy.log(`Room ${index + 1} children: ${children}`);
           });
       });
+
+
+
+    // open advanced options
+    // cy.get('[data-testid="ExpandMoreIcon"]').click({ multiple: true });
+
+    // cy.wait(3500);
+
+    cy.get('[data-testid="save-btn"]')
+      .should("be.visible")
+      .and("be.enabled")
+      .wait(100)
+      .click({ multiple: true });
   });
 });
