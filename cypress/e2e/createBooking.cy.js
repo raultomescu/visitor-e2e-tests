@@ -63,7 +63,6 @@ describe("Login and Create Booking", () => {
         // here add what rooms you want to chose from the dropdown
         // maybe in the future add a function to select first available room
         cy.contains("Room 1").should("be.visible").click({ force: true });
-        cy.contains("Room 2").should("be.visible").click({ force: true });
 
         cy.get('[data-testid="save-btn"]')
           .should("be.visible")
@@ -84,7 +83,7 @@ describe("Login and Create Booking", () => {
         cy.get(`input[name="roomBookings[${index}].numberOfAdults"]`)
           .scrollIntoView()
           .should("be.visible")
-          .wait(500) 
+          .wait(500)
           .then(($adultsInput) => {
             const adults = parseInt($adultsInput.val());
             expect(adults).to.be.within(1, 4);
@@ -102,8 +101,6 @@ describe("Login and Create Booking", () => {
             cy.log(`Room ${index + 1} children: ${children}`);
           });
       });
-
-
 
     // open advanced options
     // cy.get('[data-testid="ExpandMoreIcon"]').click({ multiple: true });

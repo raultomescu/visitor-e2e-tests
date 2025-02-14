@@ -606,7 +606,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cypress-example@workspace:."
   dependencies:
-    cypress: "npm:^14.0.0"
+    cypress: "npm:^14.0.2"
     eslint: "npm:^7.23.0"
     imap: "npm:^0.8.19"
     imap-simple: "npm:^1.6.3"
@@ -619,7 +619,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"cypress@npm:^14.0.0":
+"cypress@npm:^14.0.2":
   version: 14.0.3
   resolution: "cypress@npm:14.0.3"
   dependencies:
