@@ -92,9 +92,6 @@ describe("Booking Flow", () => {
     );
 
     cy.get('[data-testid="first-name"]').contains("Popescu Maria").first().click();
-    
-    // cy.get('.MuiBox-root.css-lnylpq2 span')
-    //     .should('contain.text', '€189');
 
     cy.wait(2000);
 
