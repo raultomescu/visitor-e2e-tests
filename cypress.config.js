@@ -8,8 +8,8 @@ module.exports = defineConfig({
     apiUrl: "https://training.bigbyte.academy/api",
     oldApiUrl: "https://conduit.productionready.io/api",
     device: "desktop",
-    email: "test@test.com",
-    password: "Cypress123",
+    email: "support@visitorapp.co",
+    password: "oJlF^Pza6Tzv",
   },
   retries: {
     runMode: 1,

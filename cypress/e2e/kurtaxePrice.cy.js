@@ -1,14 +1,16 @@
 import login from "../selectors/login.css";
 import moment from 'moment';
+import { selectBookingDetailsService } from '../selectors/bookingServices.css';
 
 describe("Booking flow - verifying Kurtaxe & Cleaning Fee on invoice", () => {
   it("should correctly show the Kurtaxe and Cleaning Fee price on the invoice", () => {
 
-   cy.visit("https://app.visitor.de/login");
-   
-    cy.get(login.emailField).type("support@visitorapp.co");
-    cy.get(login.passwordField).type("oJlF^Pza6Tzv");
+   cy.visit("/login");
+
+    cy.get(login.emailField).type(Cypress.env("email"));
+    cy.get(login.passwordField).type(Cypress.env("password"));
     cy.get(login.signInButton).click();
+
    
     cy.get(login.navBar)
         .should("be.visible")
@@ -54,7 +56,7 @@ describe("Booking flow - verifying Kurtaxe & Cleaning Fee on invoice", () => {
 
     cy.wait(15000); 
  
-    cy.visit("https://app.visitor.de/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=Popescu");
+    cy.visit("/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=Popescu");
 
     cy.wait(25000); 
 
@@ -68,19 +70,11 @@ describe("Booking flow - verifying Kurtaxe & Cleaning Fee on invoice", () => {
 
     cy.contains('li.MuiMenuItem-root', 'View invoice').click();
 
-    cy.get('input.input.dark[value="Kurtaxe HS"]')   
-    .closest('div.view.w-70.p-4.flex')            
-    .siblings('.view.w-18.p-4')                   
-    .find('.span.dark.right')                     
-    .should('contain.text', '€80.00');            
-    
-    cy.get('input.input.dark[value="Cleaning Fee"]')
-    .closest('div.view.w-70.p-4.flex')
-    .siblings('.view.w-18.p-4')
-    .find('.span.dark.right')
-    .should('contain.text', '€40.00');
+    selectBookingDetailsService('Kurtaxe HS')
+      .should('contain.text', '€80.00');
 
-
+    selectBookingDetailsService('Cleaning Fee')
+      .should('contain.text', '€40.00');
   });
 
 })
