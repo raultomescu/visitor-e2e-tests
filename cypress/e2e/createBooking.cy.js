@@ -24,17 +24,19 @@ describe("Login and Create Booking", () => {
     cy.get('[data-testid="add-booking-btn"]').should("be.visible").click();
 
     // Click on February 3rd in the calendar
-    cy.get('[data-testid="calendar-day-3-february-2025"]')
+    cy.get('[data-testid="calendar-day-13-march-2025"]')
       .should("be.visible")
       .click();
 
     // Click on February 5th in the calendar
-    cy.get('[data-testid="calendar-day-5-february-2025"]')
+    cy.get('[data-testid="calendar-day-15-march-2025"]')
       .should("be.visible")
       .click();
 
     // Fill in customer name and select from dropdown
-    cy.get('input[name="customer.fullName"]').should("be.visible").type("Raul");
+    cy.get('input[name="customer.fullName"]')
+      .should("be.visible")
+      .type("Raul ");
 
     // Wait for the dropdown to load after typing
     cy.wait(3000); // Wait for the dropdown to load
@@ -44,5 +46,71 @@ describe("Login and Create Booking", () => {
       .eq(1) // Select the second matching element (index 1)
       .should("be.visible") // Ensure the element is visible
       .click({ force: true }); // Force click to ensure the element is clicked
+
+    // Select room
+    cy.get("#mui-component-select-_roomBookings")
+      .first()
+      .should("be.visible")
+      .click({ force: true });
+
+    cy.wait(3000); // Wait for the dropdown to load
+
+    cy.get('[role="listbox"]')
+      .first()
+      .should("be.visible")
+      .should("have.length.gt", 0)
+      .within(() => {
+        // here add what rooms you want to chose from the dropdown
+        // maybe in the future add a function to select first available room
+        cy.contains("Room 1").should("be.visible").click({ force: true });
+
+        cy.get('[data-testid="save-btn"]')
+          .should("be.visible")
+          .and("be.enabled")
+          .click({ force: true });
+      });
+
+    // Verify booking creation
+    cy.get('input[name*="roomBookings"][name*="pricePerNight"]')
+      .should("have.length.gt", 0)
+      .each(($priceInput, index) => {
+        // Verify price
+        const price = parseFloat($priceInput.val());
+        expect(price).to.be.greaterThan(0);
+        cy.log(`Room ${index + 1} price per night: €${price}`);
+
+        // Verify adults
+        cy.get(`input[name="roomBookings[${index}].numberOfAdults"]`)
+          .scrollIntoView()
+          .should("be.visible")
+          .wait(500)
+          .then(($adultsInput) => {
+            const adults = parseInt($adultsInput.val());
+            expect(adults).to.be.within(1, 4);
+            cy.log(`Room ${index + 1} adults: ${adults}`);
+          });
+
+        // Verify children
+        cy.get(`input[name="roomBookings[${index}].numberOfChildren"]`)
+          .scrollIntoView()
+          .should("be.visible")
+          .wait(500)
+          .then(($childrenInput) => {
+            const children = parseInt($childrenInput.val());
+            expect(children).to.be.at.least(0);
+            cy.log(`Room ${index + 1} children: ${children}`);
+          });
+      });
+
+    // open advanced options
+    // cy.get('[data-testid="ExpandMoreIcon"]').click({ multiple: true });
+
+    // cy.wait(3500);
+
+    cy.get('[data-testid="save-btn"]')
+      .should("be.visible")
+      .and("be.enabled")
+      .wait(100)
+      .click({ multiple: true });
   });
 });
