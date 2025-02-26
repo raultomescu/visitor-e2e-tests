@@ -11,7 +11,7 @@
     "test": "npx cypress open --browser electron"
   },
   "devDependencies": {
-    "cypress": "^14.0.2",
+    "cypress": "^14.0.3",
     "eslint": "^7.23.0"
   },
   "dependencies": {

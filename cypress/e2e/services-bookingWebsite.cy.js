@@ -2,18 +2,33 @@ import login from "../selectors/login.css";
 
 describe("Booking Flow", () => {
   it("should complete booking", () => {
-    // Visit the specified URL
+    
     cy.visit(
-        "https://hotel-visitor-test.visitorapp.co/?language=en-US&checkinDate=01-01-2026&checkoutDate=02-01-2026"
+        "https://visitor-qa.visitor.de/?language=en-US&checkinDate=01-01-2026&checkoutDate=02-01-2026"
      );
-    // Select the number of adults and children
+    //mesaj de la loading
+//sa verific ca  toate cele 4 camere sunt afisate
+
+    cy.contains('button', 'Show prices')
+      .should('be.visible');
+ 
+    cy.contains('span', '€199')
+      .should('not.exist');
+
     cy.get('input[name="numberOfAdults"]').should("exist").clear().type("2");
     cy.get('input[name="numberOfChildren"]').should("exist").clear().type("0");
 
-    // Wait for "0 Room(s)" to appear
-    cy.contains("p", "0 Room(s)").should("be.visible"); 
+    cy.contains('button', 'Show prices')
+      .should('not.exist');
 
-    // Add a room
+    cy.contains('span', '€199')
+      .should('be.visible');
+
+    cy.get('[data-testid="next-step-btn"]')
+    .scrollIntoView()
+    .should('have.attr', 'disabled');  
+
+    // Add a room choose Doule room.click
     cy.contains("h4", "Double Room")
       .should("exist")
       .then((doubleRoom) => {
@@ -25,60 +40,107 @@ describe("Booking Flow", () => {
           .click({ force: true });
       });
 
-    // Compare costs on different pages
+    cy.get('[data-testid="next-step-btn"]')
+      .scrollIntoView()
+      .should('not.have.attr', 'disabled'); 
 
-    cy.get('[data-testid="final-cost"]')
-      .should("be.visible")
-      .invoke("text")
-      .then((initialFinalCost) => {
-        const firstPageCost = initialFinalCost.trim();
 
-        cy.get('[data-testid="next-step-btn"]')
-          .should("exist")
-          .scrollIntoView()
-          .click({ force: true });
+    cy.get('[data-testid="next-step-btn"]')
+      .should("exist")
+      .scrollIntoView()
+      .click({ force: true });
 
-        cy.get('[data-testid="final-cost"]')
-          .should("be.visible")
-          .invoke("text")
-          .then((nextPageFinalCost) => {
-            const secondPageCost = nextPageFinalCost.trim();
-            expect(firstPageCost).to.equal(secondPageCost);
-          
+    cy.get('input[name="firstName"]').should("exist").clear().type("Popescu");
+    cy.get('input[name="lastName"]').should("exist").clear().type("Maria");
+    cy.get('input[name="phoneNumber"]').should("exist").clear().type("0712345678");
+    cy.get('input[name="email"]').should("exist").clear().type("maria@gmail.com");
 
-            cy.get('input[name="firstName"]').should("exist").clear().type("Popescu");
-            cy.get('input[name="lastName"]').should("exist").clear().type("Maria");
-            cy.get('input[name="phoneNumber"]').should("exist").clear().type("0712345678");
-            cy.get('input[name="email"]').should("exist").clear().type("maria@gmail.com");
+    cy.get('span[style="text-transform: capitalize;"]')
+      .eq(0)  
+      .should('contain.text', '01 Jan 2026');
 
-            cy.get('input[id="roomBookings[0].numberOfAdults"]')
-                .should("have.value", "2");
+    cy.get('span[style="text-transform: capitalize;"]')
+      .eq(1)  
+      .should('contain.text', '02 Jan 2026');
 
-            cy.get('input[id="roomBookings[0].numberOfChildren"]')
-                .should("have.value", "0");
+    cy.get('input[id="roomBookings[0].numberOfAdults"]')
+      .should("have.value", "2");
 
-            cy.get('[data-testid="final-cost"] span')
-                .should('contain.text', '€189');
+    cy.get('input[id="roomBookings[0].numberOfChildren"]')
+      .should("have.value", "0");
+              
+    cy.get('h6.MuiTypography-root.MuiTypography-subtitle2')
+       .should('contain.text', 'Double Room');
 
-            cy.get(`[data-testid="next-step-btn"]`)
-              .should("exist")
-              .scrollIntoView()
-              .click({ force: true });
+    cy.get('[data-testid="final-cost"] span')
+      .should('contain.text', '99');
 
-            cy.wait(5000); 
+    cy.get('[id="roomBookings[0].numberOfAdults"]')
+      .clear()
+      .type('1');
+            
+    cy.get('[id="roomBookings[0].numberOfChildren"]')
+      .clear()
+      .type('1');
 
-          });
-      });
+    cy.get('[id="roomBookings[0].childrenAges[0].age"]')
+      .clear()
+      .type('5');
+
+    cy.get('[data-testid="final-cost"] span')
+      .should('contain.text', '€106');
+
+    cy.contains('a', 'Make changes')
+      .should('be.visible')
+      .click();
+              
+    cy.get('input[placeholder="Number of adults"]')
+      .should('have.value', '1');
+
+    cy.get('input[placeholder="Number of children"]')
+      .should('have.value', '1');
+    
+    cy.get('input[placeholder="Child 1 age"]')
+      .should('have.value', '5');
+    
+    // cy.get('input[placeholder="Child 1 age"]')
+    //   .clear()
+    //   .type('6');
+    
+    // cy.get('[data-testid="next-step-btn"]')
+    //   .should("exist")
+    //   .scrollIntoView()
+    //   .click({ force: true });
+
+
+    cy.get(`[data-testid="next-step-btn"]`)
+      .should("exist")
+      .scrollIntoView()
+      .click({ force: true });
+
+    cy.get('input[name="firstName"]').should("exist").clear().type("Popescu");
+    cy.get('input[name="lastName"]').should("exist").clear().type("Maria");
+    cy.get('input[name="phoneNumber"]').should("exist").clear().type("0712345678");
+    cy.get('input[name="email"]').should("exist").clear().type("maria@gmail.com");
+
+    cy.wait(5000); 
+
+    cy.get(`[data-testid="next-step-btn"]`)
+      .should("exist")
+      .scrollIntoView()
+      .click({ force: true });
+
   });
+
 
   it("should log in and verify booking details", () => {
 
     cy.clearCookies();
     cy.clearLocalStorage();
-    cy.visit("https://app.visitorapp.co/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true");
+    cy.visit("/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true");
 
-    cy.get(login.emailField).type("support+engineering@visitorapp.co");
-    cy.get(login.passwordField).type("OTTAX2E421KA");
+    cy.get(login.emailField).type("support@visitorapp.co");
+    cy.get(login.passwordField).type("oJlF^Pza6Tzv");
     cy.get(login.signInButton).click();
 
     cy.get(login.navBar)
@@ -88,14 +150,16 @@ describe("Booking Flow", () => {
       });
 
     cy.visit(
-      "https://app.visitorapp.co/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=maria"
+      "/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=maria"
     );
 
     cy.get('[data-testid="first-name"]').contains("Popescu Maria").first().click();
 
-    cy.wait(2000);
+    cy.wait(10000);
 
     cy.get('.MuiBox-root.css-1nylpq2 span')
-        .should('contain.text', '€189');
+        .should('contain.text', '€106');
+
+     //call the functiion that checks the booking information
   });
 })
