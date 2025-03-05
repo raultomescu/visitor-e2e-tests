@@ -1,3 +1,5 @@
+import { address } from "./constants"; 
+
 Cypress.Commands.add("checkBookingInformation", () => {
     const expectedFullName = "Popescu Maria";
     const expectedEmail = "maria@gmail.com";
@@ -8,11 +10,6 @@ Cypress.Commands.add("checkBookingInformation", () => {
     const expectedNumberOfAdults = "1";
     const expectedNumberOfChildren = "1";
     const expectedPricePerNight = "149";
-  
-    // cy.get('[data-testid="first-name"]')
-    //   .contains(expectedFullName)
-    //   .first()
-    //   .click();
   
     cy.get('[data-testid="MoreVertIcon"]').click();
     cy.get('[data-testid="edit-btn"]').click();
@@ -43,5 +40,33 @@ Cypress.Commands.add("checkBookingInformation", () => {
   
     cy.get('input[id="roomBookings[0].pricePerNight"]')
       .should("have.value", expectedPricePerNight);
-  });
+
+    cy.get('input[name="bookingServices[0].isActive"]')
+      .should('be.checked');
   
+    cy.get('input[name="bookingServices[1].isActive"]')
+      .should('be.checked');
+  });
+
+  Cypress.Commands.add("login", (loginSelectors) => {
+    cy.visit("/login", {
+      timeout: 180000,
+      failOnStatusCode: false
+    });
+  
+    cy.get(loginSelectors.emailField).type(Cypress.env("email"));
+    cy.get(loginSelectors.passwordField).type(Cypress.env("password"));
+    cy.get(loginSelectors.signInButton).click();
+  
+    cy.wait(6000);
+    cy.contains("Welcome", { timeout: 30000 }).should("be.visible");
+  });
+
+  Cypress.Commands.add("fillAddress", (addr = address) => {
+  
+    cy.get('input[name="address.streetName"]').clear().type(addr.streetName);
+    cy.get('input[name="address.streetNumber"]').clear().type(addr.streetNumber);
+    cy.get('input[name="address.zipCode"]').clear().type(addr.zipCode);
+    cy.get('input[name="address.city"]').clear().type(addr.city);
+    cy.get('input[name="address.country"]').clear().type(addr.country);
+  });

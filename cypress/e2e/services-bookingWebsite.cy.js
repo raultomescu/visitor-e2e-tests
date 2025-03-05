@@ -124,11 +124,7 @@ describe("Booking Flow", () => {
     cy.get('input[name="phoneNumber"]').should("exist").clear().type("0712345678");
     cy.get('input[name="email"]').should("exist").clear().type("maria@gmail.com");
 
-    cy.get('input[name="address.streetName"]').clear().type('Traian Vuia');
-    cy.get('input[name="address.streetNumber"]').clear().type('32');
-    cy.get('input[name="address.zipCode"]').clear().type('111111');
-    cy.get('input[name="address.city"]').clear().type('Timisoara');
-    cy.get('input[name="address.country"]').clear().type('Romania');
+    cy.fillAddress();
 
     cy.get(`[data-testid="next-step-btn"]`)
       .should("exist")
@@ -140,18 +136,8 @@ describe("Booking Flow", () => {
         { args: { login } },  
         ({ login }) => {
           Cypress.require('../support/commands.js');
-          cy.visit("/login", {
-            timeout: 180000, 
-            failOnStatusCode: false
-          });
-          cy.get(login.emailField).type(Cypress.env("email"));
-          cy.get(login.passwordField).type(Cypress.env("password"));
-          cy.get(login.signInButton).click();
 
-          cy.wait(6000);
-        
-          cy.contains('Welcome', { timeout: 30000 })
-            .should('be.visible');
+          cy.login(login);
         
           cy.visit(
             "/bookings?sortField=createdAt&sortDirection=DESC&includeDeletedBookings=true&fullSearch=maria"
