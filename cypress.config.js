@@ -39,5 +39,7 @@ module.exports = defineConfig({
       }
     },
     baseUrl: "https://app.visitor.de",
+    pageLoadTimeout: 18000,
+    experimentalOriginDependencies: true
   },
 });
