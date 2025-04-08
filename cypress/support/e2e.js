@@ -16,6 +16,8 @@
 // Import commands.js using ES2015 syntax:
 import './register.cmd'
 import './article.cmd'
+import './commands';
+
 
 // ignore all console errors in app
 // eslint-disable-next-line no-unused-vars
